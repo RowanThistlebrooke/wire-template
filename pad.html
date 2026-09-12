@@ -37,6 +37,10 @@
 <script>
 const db = supabase.createClient(WIRE.url, WIRE.key);
 
+// Treat names and imported text as text in HTML and quoted attributes.
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+
 async function guard() {
   const { data } = await db.auth.getSession();
   if (!data.session) location.href = 'index.html';
@@ -47,11 +51,12 @@ async function show() {
     .from('events')
     .select('value, unit, occurred_at')
     .eq('metric', 'weight_kg')
+    .eq('event_type', 'measurement')
     .order('occurred_at', { ascending: false })
     .limit(10);
   if (error) { msg.textContent = error.message; return; }
   list.innerHTML = data.map(r =>
-    `<li>${r.value} ${r.unit || ''}<span>${new Date(r.occurred_at).toLocaleString()}</span></li>`
+    `<li>${r.value} ${escapeHtml(r.unit || '')}<span>${new Date(r.occurred_at).toLocaleString()}</span></li>`
   ).join('');
 }
 

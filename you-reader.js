@@ -245,12 +245,21 @@ function testCommit(points, commit, commits, todayStr) {
     beforeMean: before.length ? Math.round(mean(before)) : null
   };
 
-  // Nothing to compare against. Say so, and still show what is there.
+  // Missing windows and one-point windows cannot supply a comparison bar.
+  // Keep the available averages without calculating NaN or Infinity.
   if (!before.length) {
     out.verdict = 'no before';
-    out.why = `${during.length} days while it ran, and nothing before it. ` +
-              `Your data starts after this began, so there is no version of ` +
-              `you without it to compare against.`;
+    out.why = during.length
+      ? `${during.length} recorded days while it ran, but none in the preceding comparison window.`
+      : 'No recorded days in either comparison window.';
+    return out;
+  }
+
+  if (before.length < 2 || during.length < 2) {
+    out.verdict = 'early';
+    out.needs = Math.max(MIN_DAYS - before.length, MIN_DAYS - during.length);
+    out.why = `${before.length} recorded days before and ${during.length} during. ` +
+              `A comparison needs at least ${MIN_DAYS} recorded days on each side.`;
     return out;
   }
 
@@ -268,6 +277,13 @@ function testCommit(points, commit, commits, todayStr) {
     out.why = `${dir === 'up' ? 'Up' : 'Down'} ${Math.abs(out.effect)} points so far. ` +
               `That is real movement, but it is ${short} day${short > 1 ? 's' : ''} ` +
               `short of being worth a verdict. Keep going.`;
+    return out;
+  }
+
+  // An unchanged series is not a finding, including when both spreads are zero.
+  if (effect === 0) {
+    out.verdict = 'no finding';
+    out.why = 'No difference between the before and during average indices.';
     return out;
   }
 

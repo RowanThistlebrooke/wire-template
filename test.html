@@ -43,6 +43,10 @@
 <script src="you-reader.js"></script>
 <script>
 const db = supabase.createClient(WIRE.url, WIRE.key);
+
+// Treat names and imported text as text in HTML and quoted attributes.
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 let COMMITS = [], SERIES = {}, YOU = [];
 
 const TITLE = {
@@ -60,7 +64,7 @@ const CLASS = {
 function show() {
   const commit = COMMITS.find(x => x.id === c.value);
   const points = m.value === 'YOU' ? YOU : (SERIES[m.value] || []);
-  if (!commit || !points.length) { out.innerHTML = ''; return; }
+  if (!commit) { out.innerHTML = ''; return; }
 
   const today = new Date().toISOString().slice(0, 10);
   const r = testCommit(points, commit, COMMITS, today);
@@ -70,7 +74,7 @@ function show() {
   const num = (v, l, unit) => `<div class="num"><b>${v}</b><span>${l}</span><span>${unit}</span></div>`;
   out.innerHTML = `<div class="card">
     <div class="verdict ${CLASS[r.verdict]}">${TITLE[r.verdict]}</div>
-    <p class="why">${why}</p>
+    <p class="why">${escapeHtml(why)}</p>
     <div class="nums">
       ${r.beforeMean !== null ? num(r.beforeMean, `before · ${r.before} recorded days`, 'average index') : ''}
       ${r.duringMean !== null ? num(r.duringMean, `during · ${r.during} recorded days`, 'average index') : ''}
@@ -97,9 +101,9 @@ function show() {
     return;
   }
 
-  c.innerHTML = COMMITS.map(x => `<option value="${x.id}">${x.name}</option>`).join('');
+  c.innerHTML = COMMITS.map(x => `<option value="${escapeHtml(x.id)}">${escapeHtml(x.name)}</option>`).join('');
   m.innerHTML = ['YOU', ...Object.keys(SERIES)]
-    .map(k => `<option value="${k}">${k}</option>`).join('');
+    .map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join('');
   c.onchange = show; m.onchange = show;
   show();
 })();

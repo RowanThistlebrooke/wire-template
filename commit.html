@@ -52,6 +52,10 @@
 <script>
 const db = supabase.createClient(WIRE.url, WIRE.key);
 
+// Treat names and imported text as text in HTML and quoted attributes.
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+
 const fmt = d => new Date(d + 'T00:00:00Z').toLocaleDateString(undefined,
   { day: 'numeric', month: 'short', year: 'numeric' });
 
@@ -59,9 +63,9 @@ function draw(commits) {
   const live = commits.filter(c => !c.to);
   const done = commits.filter(c => c.to);
   const row = c => `<div class="row">
-      <span class="name">${c.name}</span>
+      <span class="name">${escapeHtml(c.name)}</span>
       <span class="when">${fmt(c.from)}${c.to ? ' to ' + fmt(c.to) : ''} · ${c.days} days</span>
-      ${c.to ? '' : `<button data-id="${c.id}">stop</button>`}
+      ${c.to ? '' : `<button data-id="${escapeHtml(c.id)}">stop</button>`}
     </div>`;
   list.innerHTML =
     (live.length ? '<h2 class="live">running</h2>' + live.map(row).join('') : '') +

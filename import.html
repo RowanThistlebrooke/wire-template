@@ -46,6 +46,10 @@
 <script src="nav.js" defer></script>
 <script>
 const db = supabase.createClient(WIRE.url, WIRE.key);
+
+// Treat names and imported text as text in HTML and quoted attributes.
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 let PLAN = null;
 
 // --- csv, handling quoted fields ---
@@ -99,7 +103,7 @@ function plan(rows, filename) {
 
 function draw(p) {
   found.innerHTML = `
-    <p class="n">Dates from <b>${p.head[p.dateCol]}</b>. ${p.body.length} rows.</p>
+    <p class="n">Dates from <b>${escapeHtml(p.head[p.dateCol])}</b>. ${p.body.length} rows.</p>
     <label class="row"><span>from</span>
       <input type="text" id="src" value="${p.guess}" placeholder="yt">
     </label>

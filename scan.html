@@ -51,6 +51,10 @@
 <script src="you-reader.js"></script>
 <script>
 const db = supabase.createClient(WIRE.url, WIRE.key);
+
+// Treat names and imported text as text in HTML and quoted attributes.
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 let COMMITS = [], SERIES = {};
 
 // ---- the scan: one commit against everything ----
@@ -92,7 +96,7 @@ function show() {
   const leads = usable.filter(r => r.lead);
 
   if (!usable.length) {
-    out.innerHTML = `<p class="err">Nothing to compare. ${rows[0] ? rows[0].why : ''}</p>`;
+    out.innerHTML = `<p class="err">Nothing to compare. ${escapeHtml(rows[0] ? rows[0].why : '')}</p>`;
     return;
   }
 
@@ -104,7 +108,7 @@ function show() {
     const t = r.raised / max * 50;
     const col = r.lead ? (r.effect > 0 ? '#4bb5a6' : '#d1584a') : '#39434a';
     return `<div class="r ${r.lead ? 'hit' : ''}">
-      <div class="m">${r.metric}</div>
+      <div class="m">${escapeHtml(r.metric)}</div>
       <div class="track">
         <div class="zero"></div>
         <div class="thr" style="left:${50 - t}%"></div>
@@ -147,7 +151,7 @@ function show() {
     out.innerHTML = '<p class="err">No commits yet.</p>';
     return;
   }
-  c.innerHTML = COMMITS.map(x => `<option value="${x.id}">${x.name}</option>`).join('');
+  c.innerHTML = COMMITS.map(x => `<option value="${escapeHtml(x.id)}">${escapeHtml(x.name)}</option>`).join('');
   c.onchange = show;
   show();
 })();

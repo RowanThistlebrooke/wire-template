@@ -61,6 +61,10 @@
 <script src="you-reader.js"></script>
 <script>
 const db = supabase.createClient(WIRE.url, WIRE.key);
+
+// Treat names and imported text as text in HTML and quoted attributes.
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 let OPEN = null;   // which metric has its band editor open
 
 function line(points, colour, key, mark) {
@@ -100,16 +104,16 @@ const label = r => !r ? '' :
 function ruleButtons(metric, rule) {
   const k = rule && rule.kind;
   const b = (kind, text) =>
-    `<button data-m="${metric}" data-k="${kind}" aria-pressed="${k === kind}">${text}</button>`;
+    `<button data-m="${escapeHtml(metric)}" data-k="${kind}" aria-pressed="${k === kind}">${text}</button>`;
   let html = `<span class="rules">${b('up', 'up')}${b('down', 'down')}` +
              `${b('band', 'best between')}${b('ignore', 'ignore')}</span>`;
   if (OPEN === metric) {
     html += `<div class="band">
       <span>best between</span>
-      <input id="lo" type="number" step="any" value="${rule && rule.lo !== undefined ? rule.lo : ''}">
+      <input id="lo" type="number" step="any" value="${escapeHtml(rule && rule.lo !== undefined ? rule.lo : '')}">
       <span>and</span>
-      <input id="hi" type="number" step="any" value="${rule && rule.hi !== undefined ? rule.hi : ''}">
-      <button data-m="${metric}" data-k="save">set</button>
+      <input id="hi" type="number" step="any" value="${escapeHtml(rule && rule.hi !== undefined ? rule.hi : '')}">
+      <button data-m="${escapeHtml(metric)}" data-k="save">set</button>
     </div>`;
   }
   return html;
@@ -126,7 +130,7 @@ function lanes(commits, you) {
     const s0 = pc(dayNum(c.from)), s1 = pc(Math.min(dayNum(c.to || today), b));
     const w = Math.max(6, s1 - s0);
     return `<div class="lane"><div class="bar ${c.to ? '' : 'live'}"
-      style="left:${s0}%;width:${w}%">${c.name}</div></div>`;
+      style="left:${s0}%;width:${w}%">${escapeHtml(c.name)}</div></div>`;
   }).join('');
   return `<h2>what you did</h2>${bars}
     <div class="axis"><span>${you[0].day}</span><span>${you[you.length - 1].day}</span></div>`;
@@ -144,7 +148,7 @@ function card(name, points, colour, right, cls, note) {
   const foot = ready ? `${n} days` : `${n} / 14 days to an index`;
   return `<div class="card ${cls || ''}">
     <div class="top">
-      <span class="name">${name}</span>
+      <span class="name">${escapeHtml(name)}</span>
       <span class="big">${real}<span class="rank">${big}</span></span>
     </div>
     ${line(points, colour, ready ? 'rank' : 'value', ready ? 100 : undefined)}
@@ -210,7 +214,7 @@ async function render() {
   const ignored = Object.keys(rules).filter(m => rules[m].kind === 'ignore');
   const block = (title, list, rulesFor) => !list.length ? '' :
     `<h2>${title}</h2>` + list.map(m => `<div class="row">
-       <div class="head"><span class="name">${m}</span></div>
+       <div class="head"><span class="name">${escapeHtml(m)}</span></div>
        ${ruleButtons(m, rulesFor ? rules[m] : null)}
      </div>`).join('');
 
