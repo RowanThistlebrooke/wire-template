@@ -12,7 +12,7 @@
            background:#151a1d; color:#e8e4dc; width:100%; }
   .card { border:1px solid #252d33; border-radius:10px; padding:18px; }
   .verdict { font:700 22px/1.2 system-ui; margin-bottom:10px; letter-spacing:-.01em; }
-  .finding { color:#4bb5a6; } .tangled { color:#d9a441; }
+  .finding { color:#e8e4dc; } .tangled { color:#d9a441; }
   .none, .thin { color:#69737a; }
   .why { color:#9ba4aa; font-size:14px; margin:0 0 14px; }
   .nums { display:flex; gap:22px; flex-wrap:wrap; border-top:1px solid #1b2227;
@@ -26,7 +26,7 @@
 </style>
 
 <h1>did it work</h1>
-<p class="n">Pick one thing you did and one thing you measure. It compares the days it ran against the same number of days straight before.</p>
+<p class="n">Pick one thing you did and one thing you measure. Compares available readings from equal calendar windows before and during the commit.</p>
 
 <div class="pick">
   <select id="c"></select>
@@ -46,7 +46,7 @@ const db = supabase.createClient(WIRE.url, WIRE.key);
 let COMMITS = [], SERIES = {}, YOU = [];
 
 const TITLE = {
-  finding:      'It worked',
+  finding:      'Observed change',
   tangled:      'Cannot say',
   'no finding': 'No finding',
   early:        'Too early to call',
@@ -65,15 +65,17 @@ function show() {
   const today = new Date().toISOString().slice(0, 10);
   const r = testCommit(points, commit, COMMITS, today);
 
-  const num = (v, l) => `<div class="num"><b>${v}</b><span>${l}</span></div>`;
+  const why = r.why.replace(' points', ' index points')
+    .replace(/, with nothing else running\.$/, ', with no other overlapping commits logged.');
+  const num = (v, l, unit) => `<div class="num"><b>${v}</b><span>${l}</span><span>${unit}</span></div>`;
   out.innerHTML = `<div class="card">
     <div class="verdict ${CLASS[r.verdict]}">${TITLE[r.verdict]}</div>
-    <p class="why">${r.why}</p>
+    <p class="why">${why}</p>
     <div class="nums">
-      ${r.beforeMean !== null ? num(r.beforeMean, `before · ${r.before} days`) : ''}
-      ${r.duringMean !== null ? num(r.duringMean, `during · ${r.during} days`) : ''}
-      ${r.effect !== undefined ? num((r.effect > 0 ? '+' : '') + r.effect, 'change') : ''}
-      ${r.bar !== undefined ? num(r.bar, 'the bar') : ''}
+      ${r.beforeMean !== null ? num(r.beforeMean, `before · ${r.before} recorded days`, 'average index') : ''}
+      ${r.duringMean !== null ? num(r.duringMean, `during · ${r.during} recorded days`, 'average index') : ''}
+      ${r.effect !== undefined ? num((r.effect > 0 ? '+' : '') + r.effect, 'change', 'index points') : ''}
+      ${r.bar !== undefined ? num(r.bar, 'the bar', 'index points') : ''}
     </div>
   </div>`;
 }
