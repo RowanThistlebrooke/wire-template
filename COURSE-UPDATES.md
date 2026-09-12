@@ -142,3 +142,53 @@ Keep the destination filenames exactly as shown; the website links expect test.h
 **Source issues still open:** empty and zero-variation comparisons, repeated commitment names, CSV date/format handling, large-history query limits, and escaping stored/imported text before displaying it as HTML. Account isolation, wider browser coverage, and a future scheduled pull also need separate checks. Description fixes do not resolve these source issues or certify the application as finished.
 
 **Check your copy:** open the relevant Whop lesson, use its updated instructions/download, and run its stated check with real data only. Preserve your own configuration and existing work. Refresh YOU after new readings and ask Claude again for a fresh read. Deploy source corrections to your own website; separately update and restart the local connector when its source is affected.
+
+## Update 004 — safe display and comparison states · completed projects
+
+**Status:** Published on 12 September 2026 in [commit eb1f151](https://github.com/RowanThistlebrooke/wire-template/commit/eb1f1515aa61243cee3f659adbe665435142bef0). The seven updated files were verified on wire-test before the public release. New copies from this release include the fix; existing copies require the update. This is not a claim that every application check has passed.
+
+**For:** existing completed Wire copies and new copies of the completed template from the release above. Keep the recordings and their intermediate build files unchanged. In particular, do not mix this reader with EP 3's earlier tickers.json/BODY prototype; complete the later reader/page stage first.
+
+This update changes seven files:
+
+| File | Change |
+| --- | --- |
+| [import.html](import.html) | Display the detected date-column heading as text. |
+| [commit.html](commit.html) | Escape commitment names and quoted identifiers when rendering the list and buttons. |
+| [you.html](you.html) | Escape displayed names and quoted rule/identifier values. |
+| [test.html](test.html) | Escape names and explanations, and show the reader's explanation when a selected commitment has no comparison points. |
+| [scan.html](scan.html) | Escape metric/commitment names, identifiers, and explanations. |
+| [pad.html](pad.html) | Escape displayed units and list measurement events only, so a rule event does not appear as a weight reading. |
+| [you-reader.js](you-reader.js) | Handle empty and one-point comparison windows before undefined statistics are calculated; return no finding for an exact zero effect after the existing minimum-day gate. |
+
+Names containing HTML punctuation should appear literally rather than becoming page markup. Missing windows should show their recorded-day counts and available averages, with unavailable change/bar values omitted rather than NaN or Infinity. With sufficient recorded days, an exact zero difference should not be labelled a finding.
+
+The baseline, daily averages, ranks, combined YOU calculation, date windows, minimum-day requirement, standard-error formula, nonzero-effect threshold, and scan threshold are unchanged. No database migration, authentication-policy change, or alteration to saved measurements is required. This update addresses the corresponding display and comparison-state issues listed under Update 003; it does not resolve repeated commitment names, CSV date/format handling, large-history limits, or the remaining scoring-consistency review.
+
+### Paste into the AI helping with your completed project
+
+```text
+Apply the published Wire course Update 004 to my existing completed Wire project. If the update is still marked verification pending, report that and do not apply this draft.
+
+Read my project instructions and inspect the existing files first. Confirm this is the completed rules-based project: test.html calls testCommit from you-reader.js, and you.html uses the saved-rule reader. Do not apply the update to the earlier tickers.json/BODY prototype or mix files from different course stages.
+
+Back up the affected files. Use the published Update 004 change as the reference and edit only these seven source files as needed: import.html, commit.html, you.html, test.html, scan.html, pad.html, and you-reader.js. Preserve my configuration, credentials, custom layout, unrelated code, and raw event history. Do not print secrets, run SQL, change authentication or policies, insert test/demo measurements, or edit/delete stored data.
+
+Escape user/imported text at the relevant HTML text and quoted-attribute rendering locations while preserving original values in controls and saved events. Keep pad's existing weight filter and additionally select event_type measurement. In the shared testCommit reader, return accurate missing-window explanations and avoid calculating an unavailable effect/bar when a window has fewer than two points. After the existing minimum-day gate, an exactly zero unrounded effect must return no finding. Allow test.html to render that explanation for an existing selected commitment even when its point array is empty.
+
+Preserve the baseline, ranking, daily aggregation, stale-data behavior, date-window boundaries, MIN_DAYS, standard-error formula, nonzero-effect threshold, and scan threshold. Keep all comparison logic in you-reader.js. If a correction already exists, verify it without applying it twice.
+
+Run JavaScript syntax checks. Check escaping with local display strings only, without writing measurements. Use read-only existing data or empty selections to verify applicable comparison states and compare previously valid nonzero results with the original. Report any states you could not exercise without inventing data. Show the changed files and verification results; provide each complete file if I am pasting manually.
+
+Identify the source folder actually used by my deployed website and the separate source folder used by my local Claude connector. After the website source is updated, deploy through my existing setup and refresh. Apply the same you-reader.js correction to the local copy Claude runs, preserve its configuration, and restart Claude before checking a fresh read-only response. A website deployment alone does not update that local reader. Do not overwrite another Wire project's connector or files.
+```
+
+### Pass checks
+
+1. **Display:** syntax passes; quotes, ampersands, and angle brackets in a local display check remain literal text and do not create additional elements or attributes. Pad shows measurement events only. Do not save demonstration measurements to perform this check.
+2. **Comparison:** with an existing commitment and empty/insufficient points, show a clear explanation and no NaN/Infinity. Verify the exact-zero-effect refusal and confirm previously valid nonzero comparisons retain their results. Use existing data or code inspection where a state cannot be exercised without invented readings, and report that limit.
+3. **Copies:** after deployment, refresh the website; after updating the local reader and restarting Claude, request a fresh read-only comparison. Confirm both copies use the intended updated reader. Previous chat answers do not revise themselves.
+
+**Verification:** all seven files passed JavaScript syntax checks. Six pages rendered using a read-only snapshot of existing data. The scoring series stayed unchanged across 265 historical comparisons and 21 subsets of genuine readings; expected missing-window changes removed nonfinite outputs. An isolated MCP session initialized, listed all four tools, and returned matching results for two existing comparisons. Escaping passed local string and inert HTML-parser checks. The full-day zero-variance case was checked in code; the available real data did not exercise it. All seven deployed wire-test files matched the tested candidate byte for byte.
+
+**Remaining limits:** live anonymous reads of events and day_metrics were denied, and checked signed-in reads returned only that user's rows. An independent second-account test and live policy-catalog inspection remain unverified. The manual GitHub pull passed after credential setup; a successful scheduled run remains unverified. The next configured run is 13 September at 05:17 UTC / 07:17 Zurich, subject to GitHub scheduling. Full narration review and a separate student-access test are also outstanding. These checks did not add database rows or change access policies. The local wire-test reader file was updated and tested in a new MCP process; an already-running Claude session still needs a restart to load it.
