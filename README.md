@@ -1,74 +1,139 @@
 # The Wire
 
-A personal ledger that scores you against your own past, records what you
-actually did, and tells you whether the two are connected. Built from
-scratch across eleven short episodes, with no framework, no build step,
-and nothing to pay.
+A personal ledger for what you measure and what you do. Built with plain HTML, one Postgres events table, and a shared JavaScript reader.
 
-It runs on GitHub, Vercel and Supabase. All three are free at this size
-and will stay that way.
+**Following EP 0–10? Read the [course updates and correction prompts](COURSE-UPDATES.md).** The videos show the build; that page records corrections and setup notes. Existing student copies do not update automatically.
 
 ## What it does
 
-- **One table.** Everything you ever measure goes in `events`. Not a sleep
-  table and a weight table and a spending table. One.
-- **Append only.** There is no update policy and no delete policy. You can
-  add to your history. You cannot edit it or erase it.
-- **An index, not a rank.** 100 is the person you were across your first
-  thirty readings. Ten points is one step of your own ordinary variation,
-  and there is no ceiling, so improving always shows.
-- **You say what better means.** Up, down, or best between two numbers.
-  That is the one thing a machine cannot work out, and you decide it once.
-- **Two columns.** What happened to you, and what you did. A stock has a
-  value every day. A commit has a start and an end.
-- **It refuses.** Under ten days either side of a commit, or an effect
-  smaller than two standard errors, it says so instead of guessing. If
-  two commits overlapped it names the collision rather than picking a
-  winner.
+- Save measurements as an append-only history.
+- Choose whether higher, lower, or a range is better for each metric.
+- View individual stocks and the combined YOU index.
+- Record the start and end of a commitment.
+- Compare recorded days before and during a commitment. This is an observed comparison, not proof of cause.
+- Scan for leads across stocks.
+- Let a local Claude connector read the ledger without adding or editing measurements.
 
-## The pages
+## Start your own copy
 
-| file | what it is |
-|---|---|
-| `index.html` | sign in |
-| `pad.html` | type one reading |
-| `import.html` | drop a CSV, every numeric column becomes a metric |
-| `you.html` | your stocks, your index, your commits underneath |
-| `commit.html` | start and stop the things you do |
-| `test.html` | did one commit move one stock |
-| `scan.html` | that commit against everything, at a raised bar |
-| `you-reader.js` | all the maths, in one file |
-| `nav.js` | the links between pages |
-| `config.js` | your two Supabase values, and the only personal file |
-| `pull/github.mjs` | pulls your commit count every morning |
-| `mcp/wire.mjs` | lets your AI read the ledger, and only read it |
+1. Use GitHub's **Use this template → Create a new repository**. The main branch is sufficient for the current project.
+2. Create your own Supabase project. Run `sql/01_the_table.sql` once in that new project's SQL editor. Do not rerun the setup on an existing populated database.
+3. In Supabase Authentication → Users, add the user you will use to sign into Wire. For this manual setup, enable auto-confirm.
+4. Create `config.js` at the repository root using `config.example.js`:
 
-## Set it up
+```javascript
+window.WIRE = {
+  url: 'YOUR-PROJECT-URL',
+  key: 'YOUR-PUBLISHABLE-KEY'
+};
+```
 
-1. Make a Supabase project. Run `sql/01_the_table.sql` in the SQL editor.
-2. Authentication, Users, Add user. Tick auto confirm.
-3. Copy `config.example.js` to `config.js` and paste your Project URL and
-   your **publishable** key. Never the service_role key.
-4. Import this repo on Vercel. No framework preset, no build command.
-5. Open the site, sign in, and add a reading.
+5. Replace those placeholders with the URL and publishable key from your own project. Use only the publishable key in this browser file.
+6. Import your GitHub repository into Vercel as a static site with no framework or build command.
+7. Open the deployed website, sign in with the user from step 3, and add a real reading.
+8. Open YOU and choose what better means for the metric.
 
-For the automatic puller, add five repository secrets under Settings,
-Secrets and variables, Actions: `WIRE_URL`, `WIRE_KEY`, `WIRE_EMAIL`,
-`WIRE_PASSWORD`, `GH_TOKEN`.
+Hosting plans and limits can change; check the services' current terms for your usage.
 
-## Rules this project does not break
+## Pages and files
 
-- No delete and no update on `events`, ever.
-- No invented data. Not for demos, not for tests, not to make a chart
-  look better. The table cannot be cleaned afterwards.
-- The service_role key never appears in this repo, in a page, or in a
-  chat. Secrets live in GitHub Settings or in a config file on your own
-  machine.
-- When it cannot know, it says nothing. Silence is a feature and it is
-  the reason any of the numbers are worth reading.
+| File | Purpose |
+| --- | --- |
+| `index.html` | Sign in |
+| `pad.html` | Record weight |
+| `import.html` | Import measurements from CSV |
+| `you.html` | Stock cards, charts, and combined YOU index |
+| `commit.html` | Start and end commitments |
+| `test.html` | Compare one commitment against a stock |
+| `scan.html` | Explore leads across stocks |
+| `you-reader.js` | Shared calculations used by the website and connector |
+| `nav.js` | Navigation links |
+| `sql/01_the_table.sql` | Fresh database setup |
+| `pull/github.mjs` | Import GitHub commit counts |
+| `mcp/wire.mjs` | Local read-only MCP tools |
 
-## The course
+## Automatic GitHub data pull
 
-Eleven episodes, in order. The build is the point: a system you assembled
-yourself is one you can change, and every file here is short enough to
-read out loud.
+In your GitHub repository, open **Settings → Secrets and variables → Actions**. Add these repository secrets:
+
+| Name | Value |
+| --- | --- |
+| `WIRE_URL` | Your Supabase Project URL |
+| `WIRE_KEY` | Your Supabase publishable key |
+| `WIRE_EMAIL` | The email used to sign into your Wire website |
+| `WIRE_PASSWORD` | That Wire user's password |
+| `GH_TOKEN` | Your GitHub personal access token, with access appropriate to the repositories you intend to count |
+
+Type secret names exactly, without spaces. Keep passwords and personal tokens out of repository files.
+
+Open **Actions → pull → Run workflow** for the first check. Inspect the job's error log if it fails. A green check confirms the run completed.
+
+The workflow is scheduled for 05:17 UTC daily, subject to GitHub's scheduling availability. It requests the previous 14 UTC days, excluding today, for the repository owner. A successful manual run does not prove a future scheduled run has occurred.
+
+## Connect Claude Desktop
+
+These are local desktop setup instructions. The connector's source must stay available on that computer.
+
+1. Install Node.js, then download or clone your own complete Wire repository locally.
+2. In Terminal, enter the `mcp` directory inside that copy. If a matching `package-lock.json` is supplied, run `npm ci --ignore-scripts`; otherwise run `npm install --ignore-scripts` and retain the generated lockfile.
+3. On macOS, run `command -v node` and copy its output. This is the full Node path for `command` below.
+4. Find the full path to `mcp/wire.mjs` in your local copy.
+5. Open Claude Desktop's local MCP configuration using its Developer settings. On macOS the file is `~/Library/Application Support/Claude/claude_desktop_config.json`.
+6. Back up the configuration. Add a `wire` entry inside its existing `mcpServers` object; preserve all other connectors and preferences. If that name is already in use, choose a distinct name for this copy.
+
+This is a complete minimal configuration for a previously empty file. If your file already has settings, merge only the server entry rather than replacing the whole file:
+
+```json
+{
+  "mcpServers": {
+    "wire": {
+      "command": "FULL-PATH-TO-NODE",
+      "args": ["FULL-PATH-TO-YOUR-WIRE/mcp/wire.mjs"],
+      "env": {
+        "WIRE_URL": "YOUR-PROJECT-URL",
+        "WIRE_KEY": "YOUR-PUBLISHABLE-KEY",
+        "WIRE_EMAIL": "YOUR-WIRE-SIGN-IN-EMAIL",
+        "WIRE_PASSWORD": "YOUR-WIRE-SIGN-IN-PASSWORD"
+      }
+    }
+  }
+}
+```
+
+7. Replace every placeholder. Use the project and user that match your website. Keep this local file private.
+8. Save valid JSON, fully quit Claude Desktop, reopen it, and start a new Chat. Enable your Wire connector if needed.
+9. Ask: **Use only my Wire connector. List my metric names and latest readings. Do not change any data.**
+
+The tools are `stocks`, `history`, `commits`, and `did_it_work`. An empty ledger can correctly return an empty result. The connector's combined-index date does not by itself tell you whether every metric has newer readings.
+
+For a startup timeout or the tested Mac Desktop-folder workaround, see [Update 002](COURSE-UPDATES.md#update-002--claude-desktop-setup--ep-10). For Windows paths and current host setup, see the [official local MCP guide](https://modelcontextprotocol.io/docs/develop/connect-local-servers).
+
+## What changes when you add data
+
+Readings are saved in Supabase. Open or refresh YOU to retrieve them and recalculate its display. An already-open dashboard does not poll for new readings. Ask Claude again for a fresh tool response.
+
+A new metric appears under **Not scored yet** until you choose a rule. Multiple readings on the same day share a daily average. A stock's displayed index needs 14 recorded days, not 14 entries.
+
+The current combined YOU calculation can include a declared stock before that stock's individual index is displayed. Its first up-to-30 daily means are recalculated as data arrives, and the combined series can reuse a stock's latest index for up to seven days. Older backfills and changed rules can change calculated history while preserving the raw events. These behaviors remain part of the course consistency review; this README does not change the reader.
+
+## Updating your project
+
+Check [COURSE-UPDATES.md](COURSE-UPDATES.md), apply the relevant correction to your copy, run its check, and deploy through your existing GitHub/Vercel setup. Preserve your own configuration and custom work.
+
+Your local Claude runtime is a separate copy. When an update affects the reader or MCP source, apply it to the files Claude actually runs and restart Claude. Publishing the website alone does not update the local connector.
+
+## The course and the face
+
+EP 0–10 are the plumbing build record. Comparison wording notes belong with EP 7; connector setup notes belong with EP 10. Exact episode titles and recording timestamps are not indexed in this repository yet.
+
+The face is a presentation layer over the existing reads and writes. A visual redesign does not require recreating the database.
+
+## Project boundaries
+
+- Keep the events ledger append-only. Do not add update/delete policies or erase history.
+- Do not add invented readings for demos or tests.
+- Never put a service-role/secret key into the website or repository.
+- Preserve calculation thresholds and refusal states while fixing setup or presentation.
+- Keep the shared calculations in `you-reader.js`.
+
+The main student flow has been exercised, including a real Claude Desktop tool conversation. Final checks remain for account isolation, insufficient-data cases, varied CSV files, date boundaries, large histories, scheduled runs, and the scoring consistency described above. See the updates page for the current state.
