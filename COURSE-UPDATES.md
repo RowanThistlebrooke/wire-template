@@ -12,7 +12,7 @@ This is not a claim that every edge case has passed. Scoring consistency, insuff
 
 ## Update 001 — comparison wording · EP 7
 
-**Status:** Tested on wire-test at commit `3b4e7dcf9bacea15ea67f550f720378f65039108`. The public template rollout is pending. Check your page rather than assuming your copy includes it.
+**Status:** Included in the public wire-template since [commit 0d9b8e9](https://github.com/RowanThistlebrooke/wire-template/commit/0d9b8e966f5a9bcb7a5ff3825f9ea2fa443f2dab). The published test.html matches the tested wire-test file, and you-reader.js is unchanged. New copies made from this version include the correction; existing copies still need the update if they show the old wording.
 
 **Needs the update:** the comparison heading says `It worked`, or its explanation says `with nothing else running`.
 
