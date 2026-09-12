@@ -124,7 +124,7 @@ Your local Claude runtime is a separate copy. When an update affects the reader 
 
 ## The course and the face
 
-EP 0–10 are the plumbing build record. Comparison wording notes belong with EP 7; connector setup notes belong with EP 10. Exact episode titles and recording timestamps are not indexed in this repository yet.
+EP 0–10 are the plumbing build record. Comparison wording notes belong with EP 7; connector setup notes belong with EP 10. The [EP 0–10 lesson index](COURSE-UPDATES.md#ep-010-lesson-index) lists the episode titles and Whop links. Recorded footage is unchanged, and exact correction timestamps remain unreviewed.
 
 The face is a presentation layer over the existing reads and writes. A visual redesign does not require recreating the database.
 

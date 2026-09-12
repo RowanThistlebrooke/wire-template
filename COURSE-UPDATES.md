@@ -86,3 +86,59 @@ Apply the specified update to your own source, check it, and publish through you
 The local Claude connector also has its own files. A website deployment does not update those files. Apply the relevant source changes to the copy Claude actually runs, preserve its settings, and restart Claude.
 
 The videos remain the build record. New notes will be added to this page with an update number, affected episode, exact steps or prompt, and a pass check.
+
+
+## EP 0–10 lesson index
+
+These links open the Whop course and may require your course sign-in/access. The titles and order were checked on 12 September 2026.
+
+| Episode | Lesson |
+| --- | --- |
+| EP 0 | [The Rig](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_aEj80AlBRqeZw/) |
+| EP 1 | [The Table](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_7E4C8LqkruB7U/) |
+| EP 2 | [The Door](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_YxhRE1EI0G5et/) |
+| EP 3 | [The Line](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_c0A6LlxTxiyTi/) |
+| EP 4 | [The Import](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_sexqvZSTD7VFF/) |
+| EP 5 | [What Better Means](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_dJfDvaDcFTzmw/) |
+| EP 6 | [The Commit](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_Jg66UerTRwpa4/) |
+| EP 7 | [Did It Work](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_Syh72pnPk1Yb9/) |
+| EP 8 | [The Automatic Door](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_GbIrEF7p1gJp1/) |
+| EP 9 | [The Scan](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_ppLhhs5tWhscc/) |
+| EP 10 | [The Wire](https://whop.com/rowantbk/exp_0IV6UiPi6p7Tli/app/courses/cors_hQoBZ7tJ1024Y/lessons/lesn_6iJYUAya971VG/) |
+
+
+## Update 003 — course descriptions and copyable steps · EP 0–10 · 12 September 2026
+
+**Status:** Published to all eleven Whop lesson descriptions on 12 September 2026; code syntax checked. Recorded footage unchanged and not fully timestamp-reviewed.
+
+Every lesson now links to this page. The descriptions distinguish two routes: build from an empty repository in episode order, or configure the completed template using its README. Earlier episode files are intermediate stages; do not paste them over a completed project.
+
+The corrections cover:
+
+- **EP 0–3:** the two setup routes, database versus website credentials, genuine measurements, the reporting-day boundary, and EP 3's early BODY/percentile prototype. The SQL deletion instruction is removed.
+- **EP 1:** the setup now uses the [canonical complete SQL](sql/01_the_table.sql), including explicit authenticated SELECT/INSERT grants for events and SELECT for day_metrics, while retaining ownership RLS. Run this setup once in a new project. Do not rerun CREATE TABLE setup against an existing populated Wire database.
+- **EP 4–6:** Apple Health XML versus supported CSV, date/duplicate checks, the later rules/index stage, recorded-day requirements, and commitment names and display conditions.
+- **EP 7 and EP 9:** observed comparisons and exploratory leads, available-data counts, and the limits of overlap warnings. Selecting a dropdown does not establish that a question was chosen before collecting data.
+- **EP 8:** GitHub commit counts, correct repository secrets, public-token scope, manual-run checks, and the configured daily schedule without guaranteeing execution at an exact time.
+- **EP 10:** complete local files, supported Node, dependencies, absolute paths, preserving existing Claude settings, and a new-chat read-only tool check.
+- **Copyable blocks:** numbered instructions are outside executable code, the duplicate commit.html block is removed, and EP 7 supplies the tested Update 001 comparison page.
+
+### Updated downloads
+
+EP 1, EP 7, and EP 9 have downloads marked `UPDATED_2026-09-12`. Use those or the complete updated block in the lesson. Original attachments remain to match the recorded build and may contain older wording or setup code.
+
+| Lesson | Updated download | Save in your project as |
+| --- | --- | --- |
+| EP 1 | `01_the_table_UPDATED_2026-09-12.sql` | `sql/01_the_table.sql` |
+| EP 7 | `test_UPDATED_2026-09-12.html` | `test.html` |
+| EP 9 | `scan_UPDATED_2026-09-12.html` | `scan.html` |
+
+Keep the destination filenames exactly as shown; the website links expect test.html and scan.html. The SQL file is for a fresh setup, not an instruction to reset an existing database. EP 5's attachment named you_1.html belongs in the repository as you.html.
+
+**Scope:** these are written-instruction, setup-source, and code-block wording/formatting corrections. Update 001 remains the separate website wording correction above. No live database records, scoring calculations, thresholds, or background schedule were changed by this course-description review. Existing student projects do not update automatically.
+
+**Checks and limits:** the saved descriptions and code syntax were checked. This does not constitute a complete fresh-account build test, a full video narration review, or a claim that every edge case passed. Recorded footage is unchanged; exact correction timestamps remain unreviewed.
+
+**Source issues still open:** empty and zero-variation comparisons, repeated commitment names, CSV date/format handling, large-history query limits, and escaping stored/imported text before displaying it as HTML. Account isolation, wider browser coverage, and a future scheduled pull also need separate checks. Description fixes do not resolve these source issues or certify the application as finished.
+
+**Check your copy:** open the relevant Whop lesson, use its updated instructions/download, and run its stated check with real data only. Preserve your own configuration and existing work. Refresh YOU after new readings and ask Claude again for a fresh read. Deploy source corrections to your own website; separately update and restart the local connector when its source is affected.
