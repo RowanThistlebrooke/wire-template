@@ -2,13 +2,35 @@
 
 Keep this page bookmarked. It contains corrections and setup notes for EP 0–10.
 
+**Want to use the completed template without watching videos? Start with [Make The Wire yours](START-HERE.md).** For future corrections, bookmark this page in the [original template](https://github.com/RowanThistlebrooke/wire-template/blob/main/COURSE-UPDATES.md), not only your own copy.
+
 Your existing copy does not automatically update when this template changes. Apply only the update you need, then run its check. Keep your own configuration, credentials, data, and custom work.
 
-## Current status — 12 September 2026
+## Current status — 13 September 2026
+
+Update 005 adds a video-free start guide and update-maintenance checklist. It changes documentation only. It does not resolve the application limits below or certify large-history scaling.
 
 The main student flow has worked in testing: website sign-in, recording a reading, CSV import, repeat-import detection for the same file, rules, commits, comparison, scan, a manual GitHub pull, and a Claude Desktop conversation using the connector.
 
 This is not a claim that every edge case has passed. Scoring consistency, insufficient-data cases, account isolation, varied CSV files, and future scheduled runs still need final checks.
+
+## Update 005: video-free setup and future updates
+
+- **For:** new users of the completed template and existing users looking for written instructions. No code or database update is required.
+- **Changed files:** `START-HERE.md`, `README.md`, and `COURSE-UPDATES.md` only.
+- **New:** one step-by-step guide covering the template copy, own database/user, browser config, static deployment, real first readings, rules, commitments, optional pull/MCP, customization, troubleshooting, and updates.
+- **Clarified:** Pad is weight-only; locally ignored `config.js` must actually reach the website; Wire uses its own Auth account; current MCP dependencies require Node 22 or newer; the reporting-day default is Zurich at 06:00; a template copy does not automatically synchronize.
+- **Check:** follow the guide links from the README and Whop intro. Confirm every setup section has a visible pass check. Existing users should read the update checklist without rerunning fresh SQL or importing any test readings.
+- **Verification scope:** instructions checked against current source and linked service documentation. No live database changes, credential changes, installations, new readings, or fresh-account end-to-end build were performed for this documentation update.
+
+### Keep these instructions current when releasing changes
+
+- Treat `START-HERE.md` as the canonical, video-free user path. Update it in the same release whenever setup, configuration, data entry, or day-to-day behaviour changes.
+- Add a numbered entry here with the release date/commit, who needs it, prerequisites, exact affected files, steps, a pass check, and any known limitations. State explicitly when no database change is needed.
+- For breaking or database changes, supply separately reviewed migration and private-backup instructions. Never tell existing users to rerun fresh setup, discard their configuration, or replace the entire project.
+- State whether an update affects the website, the local MCP copy, or both. Include dependency/runtime changes and restart instructions when relevant.
+- Keep old update entries and stable guide URLs. Keep the Whop intro's short path aligned; link to these live documents instead of uploading a ZIP of instructions that will become stale.
+- Verify the new-user path and the existing-customized-copy path separately. Record what actually passed and what remains untested, including larger-history/query limits before claiming scale.
 
 ## Update 001 — comparison wording · EP 7
 

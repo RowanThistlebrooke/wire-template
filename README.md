@@ -2,6 +2,8 @@
 
 A personal ledger for what you measure and what you do. Built with plain HTML, one Postgres events table, and a shared JavaScript reader.
 
+**No videos needed: [Make The Wire yours](START-HERE.md).** Follow the simple setup bullets, first-use checks, customization prompt, and safe-update steps. Bookmark the [original template's latest guide](https://github.com/RowanThistlebrooke/wire-template/blob/main/START-HERE.md) so you do not rely on a stale copy.
+
 **Following EP 0–10? Read the [course updates and correction prompts](COURSE-UPDATES.md).** The videos show the build; that page records corrections and setup notes. Existing student copies do not update automatically.
 
 ## What it does
@@ -19,7 +21,7 @@ A personal ledger for what you measure and what you do. Built with plain HTML, o
 1. Use GitHub's **Use this template → Create a new repository**. The main branch is sufficient for the current project.
 2. Create your own Supabase project. Run `sql/01_the_table.sql` once in that new project's SQL editor. Do not rerun the setup on an existing populated database.
 3. In Supabase Authentication → Users, add the user you will use to sign into Wire. For this manual setup, enable auto-confirm.
-4. Create `config.js` at the repository root using `config.example.js`:
+4. In your own GitHub repo, use **Add file → Create new file**, name it `config.js` at the repository root, and use the contents of `config.example.js`:
 
 ```javascript
 window.WIRE = {
@@ -28,9 +30,9 @@ window.WIRE = {
 };
 ```
 
-5. Replace those placeholders with the URL and publishable key from your own project. Use only the publishable key in this browser file.
+5. Replace those placeholders with the URL and publishable key from your own project, then **Commit changes**. Use only the publishable key in this browser file. `config.js` is gitignored for local work, so merely creating it on your computer does not put it in the deployed repository. The browser-editor route above deliberately includes the publishable-only config.
 6. Import your GitHub repository into Vercel as a static site with no framework or build command.
-7. Open the deployed website, sign in with the user from step 3, and add a real reading.
+7. Open the deployed website and sign in with the user from step 3, not your database password. Pad records real weight in kilograms; use Import for other genuine CSV measurements.
 8. Open YOU and choose what better means for the metric.
 
 Hosting plans and limits can change; check the services' current terms for your usage.
@@ -74,8 +76,8 @@ The workflow is scheduled for 05:17 UTC daily, subject to GitHub's scheduling av
 
 These are local desktop setup instructions. The connector's source must stay available on that computer.
 
-1. Install Node.js, then download or clone your own complete Wire repository locally.
-2. In Terminal, enter the `mcp` directory inside that copy. If a matching `package-lock.json` is supplied, run `npm ci --ignore-scripts`; otherwise run `npm install --ignore-scripts` and retain the generated lockfile.
+1. Install Node.js 22 or newer, then download or clone your own complete Wire repository locally. The current locked dependencies require Node 22 or newer; keep `you-reader.js` alongside the `mcp` folder, not just the connector folder by itself.
+2. In Terminal, enter the `mcp` directory inside that copy and run `npm ci --ignore-scripts` using the supplied lockfile. This installs connector dependencies only; the website has no npm/build step.
 3. On macOS, run `command -v node` and copy its output. This is the full Node path for `command` below.
 4. Find the full path to `mcp/wire.mjs` in your local copy.
 5. Open Claude Desktop's local MCP configuration using its Developer settings. On macOS the file is `~/Library/Application Support/Claude/claude_desktop_config.json`.
@@ -117,6 +119,8 @@ A new metric appears under **Not scored yet** until you choose a rule. Multiple 
 The current combined YOU calculation can include a declared stock before that stock's individual index is displayed. Its first up-to-30 daily means are recalculated as data arrives, and the combined series can reuse a stock's latest index for up to seven days. Older backfills and changed rules can change calculated history while preserving the raw events. These behaviors remain part of the course consistency review; this README does not change the reader.
 
 ## Updating your project
+
+Use the [safe-update checklist](START-HERE.md#9-keep-your-work-as-the-template-grows). A template copy is independent: do not replace your project with a fresh ZIP or expect a fork-sync button to maintain your custom work.
 
 Check [COURSE-UPDATES.md](COURSE-UPDATES.md), apply the relevant correction to your copy, run its check, and deploy through your existing GitHub/Vercel setup. Preserve your own configuration and custom work.
 
